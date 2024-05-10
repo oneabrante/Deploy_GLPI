@@ -1,0 +1,84 @@
+version: "3.9"
+services:
+  mariadb:
+    image: mariadb:10.7
+    container_name: mariadb
+    hostname: mariadb
+    networks:
+      - glpi-network
+    volumes:
+      - /var/lib/mysql:/var/lib/mysql
+    environment:
+      - MARIADB_ROOT_PASSWORD=password_gpli
+      - MARIADB_DATABASE=dbgpli
+      - MARIADB_USER=glpi
+      - MARIADB_PASSWORD=password_gpli
+    restart: always
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    pull_policy: always
+    networks:
+      - glpi-network
+    # volumes:
+    #   - /etc/phpmyadmin/config.inc.php:/etc/phpmyadmin/config.inc.php
+    environment:
+      - PMA_HOST=mariadb
+      - PMA_PORT=3306
+      - PMA_USER=root
+      - PMA_PASSWORD=password_gpli
+      # - UPLOAD_LIMIT=2G
+    ports:
+      - 8081:80
+
+  redis:
+    image: redis
+    container_name: redis
+    hostname: redis
+    networks:
+      - glpi-network
+    ports:
+      - "6379:6379"
+    restart: always
+
+  # Cert for certificate auto-renewal
+  cert:
+    container_name: cert
+    build: .docker/cert
+    volumes:
+      - ./certs:/app/certs
+    restart: always
+    networks:
+      - glpi-network
+
+  glpi:
+    container_name: glpi
+    build: .docker/app
+    hostname: glpi
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - "mariadb:mariadb"
+      - "redis:redis"
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /var/www/html/glpi/:/var/www/html/glpi
+    environment:
+      - TIMEZONE=America/Sao_Paulo
+      - REDIS_HOST=redis
+    restart: always
+    networks:
+      - glpi-network
+    depends_on:
+      - redis
+    # command: >
+    #   sh -c "docker exec glpi echo -e "* *\t* * *\troot\tphp /var/www/html/glpi/front/cron.php" >> /etc/crontab"
+    #   sh -c "docker exec glpi service cron restart"
+    #   sh -c "docker exec glpi php /var/www/html/glpi/bin/console cache:configure --context=core --dsn=redis://redis:6379"
+
+networks:
+  glpi-network:
