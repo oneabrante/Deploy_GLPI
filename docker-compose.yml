@@ -9,10 +9,10 @@ services:
     volumes:
       - /var/lib/mysql:/var/lib/mysql
     environment:
-      - MARIADB_ROOT_PASSWORD=password_gpli
-      - MARIADB_DATABASE=dbgpli
+      - MARIADB_ROOT_PASSWORD=password_glpi
+      - MARIADB_DATABASE=dbglpi
       - MARIADB_USER=glpi
-      - MARIADB_PASSWORD=password_gpli
+      - MARIADB_PASSWORD=password_glpi
     restart: always
 
   phpmyadmin:
@@ -28,8 +28,8 @@ services:
       - PMA_HOST=mariadb
       - PMA_PORT=3306
       - PMA_USER=root
-      - PMA_PASSWORD=password_gpli
-      # - UPLOAD_LIMIT=2G
+      - PMA_PASSWORD=password_glpi
+      - UPLOAD_LIMIT=2G
     ports:
       - 8081:80
 
@@ -55,7 +55,7 @@ services:
 
   glpi:
     container_name: glpi
-    build: .docker/app
+    image: abrantedevops/glpi_nginx:latest
     hostname: glpi
     ports:
       - "80:80"
