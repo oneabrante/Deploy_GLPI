@@ -1,39 +1,60 @@
-# Implantação do GLPI com Nginx, MariaDB e Redis
-
+# Deploy do GLPI com Nginx, MariaDB e Redis
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/glpi-project/glpi/main/pics/logos/logo-GLPI-250-black.png" width=200 margin="110px"><span style="margin: 10px;"></span>
-  <img src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Nginx_logo.svg" alt="logo nginx" width="200" height="130"><span style="margin: 10px;"></span>
-  <img src="https://static-00.iconduck.com/assets.00/mariadb-icon-512x340-txozryr2.png" width=200><span style="margin: 10px;"></span>
-  <img src="https://w7.pngwing.com/pngs/799/831/png-transparent-redis-in-memory-database-key-value-database-cache-speech-miscellaneous-logo-data-thumbnail.png" width=150><span style="margin: 10px;"></span>
+  <img src="https://raw.githubusercontent.com/glpi-project/glpi/main/pics/logos/logo-GLPI-250-black.png" width="180"><span style="margin: 10px;"></span>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Nginx_logo.svg" alt="logo nginx" width="180" height="110"><span style="margin: 10px;"></span>
+  <img src="https://static-00.iconduck.com/assets.00/mariadb-icon-512x340-txozryr2.png" width="180"><span style="margin: 10px;"></span>
+  <img src="./registry/redis_logo.png" width="130"><span style="margin: 10px;"></span>
 </p>
-
 
 
 ## Pré-requisitos
 - Docker
-- Docker Compose
+- Docker Compose 
 
 ## Como usar
-1. Clone o repositório
-2. Acesse a pasta do projeto
-3. Execute o comando `docker-compose up -d`
+1. Clone o repositório e acesse a pasta do projeto
+```bash
+git clone https://github.com/oneabrante/Deploy_GLPI.git ; cd Deploy_GLPI
+```
+2. Instale os pré-requisitos (pule caso possuir estas ferramentas)
+```bash
+chmod +x requirements.sh
+./requirements.sh
+```
+3. Inicie os containers a partir do arquivo `docker-compose.yml` com o comando:
+```bash
+docker-compose up -d
+```
+Nesse momento são criados ao todo 5 containers: glpi, phpmyadmin, mariadb, cert e redis. Os containers do phpmyadmin e cert foram criados para uma complementação de serviços à parte, porém, podem ser parados ou removidos do docker-compose.
 
-## Acesso
+## Procedimento
 - GLPI: http://localhost ou http://ip-do-servidor
 
-## Dados de acesso
-- Usuário: glpi
-- Senha: glpi
+<p align="center">
+  <img src="./registry/init.png">
+</p>
 
-## Comandos úteis
-- Iniciar os serviços: `docker-compose up -d`
-- Parar os serviços: `docker-compose down`
-- Verificar os logs: `docker-compose logs -f`
-- Acessar o container do GLPI: `docker exec -it glpi bash`
+Para configurar o GLPI com o banco de dados MariaDB, siga os passos abaixo:
+1. No campo relacionado ao banco de dados, use o nome do container do MariaDB: `mariadb`
+2. No campo do usuário, use `glpi`
+3. No campo da senha, use `password_glpi`
 
-## Licença
-MIT
+Com isso, temos que a configuração com o banco de dados esteja concluída. Selecione o nome do banco, conforme a imagem abaixo
+
+<p align="center">
+  <img src="./registry/init2.png">
+</p>
+
+<p align="center">
+  <img src="./registry/init3.png">
+</p>
+
+## Uso do Redis 
+Para habilitar o Redis, digite no terminal:
+```bash
+docker exec glpi php /var/www/html/glpi/bin/console cache:configure --context=core --dsn=redis://redis:6379
+```
 
 ## Autor
 <img src="https://avatars.githubusercontent.com/u/89171200?v=4" width=115><br><sub>Thiago Abrante</sub>
