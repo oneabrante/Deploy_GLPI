@@ -5,7 +5,7 @@
   <img src="https://raw.githubusercontent.com/glpi-project/glpi/main/pics/logos/logo-GLPI-250-black.png" width=200 margin="110px"><span style="margin: 10px;"></span>
   <img src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Nginx_logo.svg" alt="logo nginx" width="200" height="130"><span style="margin: 10px;"></span>
   <img src="https://static-00.iconduck.com/assets.00/mariadb-icon-512x340-txozryr2.png" width=200><span style="margin: 10px;"></span>
-  <img src="https://assets.stickpng.com/images/584830b5cef1014c0b5e4a9c.png" width=150><span style="margin: 10px;"></span>
+  <img src="https://w7.pngwing.com/pngs/799/831/png-transparent-redis-in-memory-database-key-value-database-cache-speech-miscellaneous-logo-data-thumbnail.png" width=150><span style="margin: 10px;"></span>
 </p>
 
 
@@ -30,7 +30,7 @@
 - Iniciar os serviços: `docker-compose up -d`
 - Parar os serviços: `docker-compose down`
 - Verificar os logs: `docker-compose logs -f`
-- Acessar o container do GLPI: `docker-compose exec glpi bash`
+- Acessar o container do GLPI: `docker exec -it glpi bash`
 
 ## Licença
 MIT
