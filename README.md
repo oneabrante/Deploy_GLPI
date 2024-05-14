@@ -8,9 +8,10 @@
 </p>
 
 
-## Pré-requisitos
-- Docker
-- Docker Compose 
+## Stack
+- Debian / Ubuntu
+- Docker v26.1.1
+- Docker Compose v1.29.2
 
 ## Como usar
 1. Clone o repositório e acesse a pasta do projeto
