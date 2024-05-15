@@ -24,9 +24,30 @@ jobs:
             - name: Build Docker images
               run: |
                 docker build -t ${{ env.glpi }} ${{ env.path_dockerfile }}
+    
+    Test-Services:
+        needs: Build
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+
+            - name: Run Docker images
+              run: |
+                docker run -d --name glpi -p 80:80 ${{ env.glpi }}
+                sleep 30
+                curl -I http://localhost:80
+
+            - name: Setup Python Version
+              uses: actions/setup-python@v2
+              with:
+                python-version: 3.8
+
+            - name: Execute Python tests
+              run: python ./verify/check.py
 
     Vulnerabilities:
-        needs: Build
+        needs: Test-Services
         runs-on: ubuntu-latest
         steps:
             - name: Checkout repository
