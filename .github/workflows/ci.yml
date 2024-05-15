@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  pull_request: 
+    branches:
+      - master
+  push:
+    branches:
+      - dev-k8s
+
+env:
+  glpi: abrantedevops/glpi_nginx:latest
+  
+  path_dockerfile: ./.docker/app
+
+
+jobs:
+    Build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+
+            - name: Build Docker images
+              run: |
+                docker build -t ${{ env.glpi }} ${{ env.path_dockerfile }}
+
+    Vulnerabilities:
+        needs: Build
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+
+            - name: Install Trivy
+              run: |
+                wget https://github.com/aquasecurity/trivy/releases/download/v0.51.1/trivy_0.51.1_Linux-64bit.deb
+                sudo dpkg -i trivy_0.42.1_Linux-64bit.deb
+
+            - name: Scan Docker images
+              run: |
+                trivy image ${{ env.glpi }}
+              
+    Registry:
+        needs: Vulnerabilities
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+        
+            - name: Login to DockerHub
+              uses: docker/login-action@v2.2.0
+              with:
+                username: ${{ secrets.USER }}
+                password: ${{ secrets.PASS }}
+        
+            - name: Push Docker images
+              run: |
+                docker build -t ${{ env.glpi }} ${{ env.path_dockerfile }}
+                docker push ${{ env.glpi }}
