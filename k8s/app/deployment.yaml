@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: glpi-app
+  name: glpi-app
+  namespace: dev-glpi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: glpi-app
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: glpi-app
+    spec:
+      containers:
+      - image: abrantedevops/glpi_nginx:latest
+        name: glpi-app
+        resources: {}
+        ports:
+        - containerPort: 80
+        env:
+        # - name: REDIS_HOST
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: glpi-config
+        #       key: host
+        # - name: REDIS_PASSWORD
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: redis
+        #       key: redis-password
+        # - name: REDIS_PORT
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: glpi-config
+        #       key: port
+        - name: TIMEZONE
+          value: America/Sao_Paulo
+        # - name: REDIS_HOST
+        #   value: redis
+        # - name: REDIS_PORT
+        #   value: "6379"
+        # - name: REDIS_PASSWORD
+        #   value: password_glpi
+        - name: MYSQL_HOST
+          value: mariadb-service
+        - name: MYSQL_PORT
+          value: "3306"
+        - name: MYSQL_DATABASE
+          value: dbglpi
+        - name: MYSQL_USER
+          value: glpi
+        - name: MYSQL_PASSWORD
+          value: password_glpi
+status: {}
