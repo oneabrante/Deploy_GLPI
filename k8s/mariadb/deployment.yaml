@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: glpi-db
+  name: glpi-db
+  namespace: dev-glpi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: glpi-db
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: glpi-db
+    spec:
+      containers:
+      - image: mariadb:10.7
+        name: glpi-db
+        resources: {}
+        ports:
+        - containerPort: 3306
+        env:
+        # - name: REDIS_HOST
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: glpi-config
+        #       key: host
+        # - name: REDIS_PASSWORD
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: redis
+        #       key: redis-password
+        # - name: REDIS_PORT
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: glpi-config
+        #       key: port
+        - name: MARIADB_ROOT_PASSWORD
+          value: password_glpi
+        - name: MARIADB_DATABASE
+          value: dbglpi
+        - name: MARIADB_USER
+          value: glpi
+        - name: MARIADB_PASSWORD
+          value: password_glpi
+status: {}
