@@ -1,9 +1,8 @@
 services:
   glpi:
     container_name: glpi
-    image: abrantedevops/glpi_nginx:latest
+    build: .docker/app
     hostname: glpi
     restart: always
     ports:
       - "80:80"
-      
