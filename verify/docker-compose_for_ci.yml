@@ -1,0 +1,8 @@
+services:
+  glpi:
+    container_name: glpi
+    build: ../.docker/app
+    hostname: glpi
+    restart: always
+    ports:
+      - "80:80"
