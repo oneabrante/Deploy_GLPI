@@ -32,11 +32,16 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v3
 
+            - name: Install NTP 
+              run: |
+                sudo apt-get update
+                sudo apt-get install -y ntp
+                sudo systemctl enable ntp
+                sudo systemctl start ntp
+
             - name: Run Docker images
               run: |
                 docker run -d --name glpi -p 80:80 ${{ env.glpi }}
-                sleep 30
-                curl -I http://localhost:80
 
             - name: Setup Python Version
               uses: actions/setup-python@v2

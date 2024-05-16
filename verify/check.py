@@ -26,21 +26,28 @@ def check():
             print()
             sys.exit(1)
         print("NGINX Status: ")
-        status = subprocess.run(["docker", "exec", "-it", container["name"], "service", "nginx", "status"], stdout=subprocess.PIPE)
-        if status.stdout.decode("utf-8").strip() == "nginx is running.":
+        command1 = ["docker", "exec", container["name"], "/bin/sh", "-c", "service nginx status"]
+        result1 = subprocess.run(command1, capture_output=True, text=True)
+        print()
+        if result1.returncode == 0:
             print("\033[92m+-+-+-+-+-+-+-+-+\033[0m")
             print("\033[92m| NGINX Running |\033[0m")
             print("\033[92m+-+-+-+-+-+-+-+-+\033[0m")
             print()
+            command2 = ["docker", "exec", container["name"], "/bin/sh", "-c", "curl -I http://localhost"]
+            result2 = subprocess.run(command2, capture_output=True, text=True)
+            print(result2.stdout)
         else:
-            print("\033[91m+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\033[0m")
-            print("\033[91m| NGINX Not Running. Check the logs. |\033[0m")
-            print("\033[91m+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\033[0m")
+            print("\033[91m+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\033[0m")
+            print("\033[91m| NGINX with error. Check the logs. |\033[0m")
+            print("\033[91m+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\033[0m")
             print()
             sys.exit(1)
         print("PHP-FPM Status: ")
-        status = subprocess.run(["docker", "exec", "-it", container["name"], "service", "php8.3-fpm", "status"], stdout=subprocess.PIPE)
-        if status.stdout.decode("utf-8").strip() == "php-fpm8.3 is running.":
+        command3 = ["docker", "exec", container["name"], "/bin/sh", "-c", "service php8.3-fpm status"]
+        result3 = subprocess.run(command3, capture_output=True, text=True)
+        print() 
+        if result3.returncode == 0:
             print("\033[92m+-+-+-+-+-+-+-+-+-+-+-+\033[0m")
             print("\033[92m| PHP-FPMv8.3 Running |\033[0m")
             print("\033[92m+-+-+-+-+-+-+-+-+-+-+-+\033[0m")
