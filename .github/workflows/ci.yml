@@ -32,9 +32,9 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v3
 
-            - name: Run Docker images and check tests
+            - name: Run Docker Compose of the test and check services
               run: |
-                docker run -d --name glpi -p 80:80 ${{ env.glpi }}
+                docker-compose -f ./verify/docker-compose.yml up -d
                 docker ps
                 echo "Start Container Test GLPI"
                 container_status=$(docker inspect -f '{{.State.Status}}' glpi)
@@ -46,6 +46,7 @@ jobs:
                 fi
                 echo "Start Test NGINX"
                 docker ps
+                docker restart glpi
                 curl -I http://localhost:80 > /dev/null 2>&1
                 if [ $? -eq 0 ]; then
                   echo -e "\033[92mNGINX status: OK\033[0m"
@@ -55,6 +56,7 @@ jobs:
                 fi
                 echo "Start Test PHP-FPM v8.3"
                 docker ps
+                docker restart glpi
                 php_status=$(docker exec glpi service php8.3-fpm status)
                 sleep 10
                 if [ $? -eq 0 ]; then
