@@ -10,11 +10,12 @@ else
 fi
 
 # Check NGINX status in container
-curl -I http://localhost:80 > /dev/null 2>&1
+nginx_status=$(docker exec glpi service nginx status)
+sleep 15
 if [ $? -eq 0 ]; then
-  echo -e "\033[92mNGINX status: OK\033[0m"
+  echo -e "\033[92mNGINX status: $nginx_status (OK)\033[0m"
 else
-  echo -e "\033[91mNGINX status: Falha\033[0m"
+  echo -e "\033[91mNGINX status: $nginx_status (Falha)\033[0m"
   exit 1
 fi
 
