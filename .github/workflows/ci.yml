@@ -32,12 +32,11 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v3
 
-            - name: Run Docker images
+            - name: Run Docker images and check tests
               run: |
                 docker run -d --name glpi -p 80:80 ${{ env.glpi }}
-
-            - name: Check container status
-              run: |
+                docker ps
+                echo "Start Container Test GLPI"
                 container_status=$(docker inspect -f '{{.State.Status}}' glpi)
                 if [ $? -eq 0 ]; then
                   echo -e "\033[92mContainer status: $container_status (OK)\033[0m"
@@ -45,9 +44,8 @@ jobs:
                   echo -e "\033[91mContainer status: $container_status (Falha)\033[0m"
                   exit 1
                 fi
-
-            - name: Check NGINX status in container
-              run: |
+                echo "Start Test NGINX"
+                docker ps
                 nginx_status=$(docker exec glpi service nginx status)
                 if [ $? -eq 0 ]; then
                   echo -e "\033[92mNGINX status: $nginx_status (OK)\033[0m"
@@ -55,9 +53,8 @@ jobs:
                   echo -e "\033[91mNGINX status: $nginx_status (Falha)\033[0m"
                   exit 1
                 fi
-
-            - name: Check PHP-FPM v8.3 status in container
-              run: |
+                echo "Start Test PHP-FPM v8.3"
+                docker ps
                 php_status=$(docker exec glpi service php8.3-fpm status)
                 if [ $? -eq 0 ]; then
                   echo -e "\033[92mPHP-FPM v8.3 status: $php_status (OK)\033[0m"
