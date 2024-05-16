@@ -1,7 +1,7 @@
 services:
   glpi:
     container_name: glpi
-    build: .docker/app
+    build: ../.docker/app
     hostname: glpi
     restart: always
     ports:
