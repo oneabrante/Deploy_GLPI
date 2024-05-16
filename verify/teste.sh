@@ -11,6 +11,7 @@ fi
 
 # Check NGINX status in container
 nginx_status=$(docker exec glpi service nginx status)
+sleep 15
 if [ $? -eq 0 ]; then
   echo -e "\033[92mNGINX status: $nginx_status (OK)\033[0m"
 else
@@ -20,6 +21,7 @@ fi
 
 # Check PHP-FPM v8.3 status in container
 php_status=$(docker exec glpi service php8.3-fpm status)
+sleep 15
 if [ $? -eq 0 ]; then
   echo -e "\033[92mPHP-FPM v8.3 status: $php_status (OK)\033[0m"
 else

@@ -47,6 +47,7 @@ jobs:
                 echo "Start Test NGINX"
                 docker ps
                 nginx_status=$(docker exec glpi service nginx status)
+                sleep 15
                 if [ $? -eq 0 ]; then
                   echo -e "\033[92mNGINX status: $nginx_status (OK)\033[0m"
                 else
@@ -56,6 +57,7 @@ jobs:
                 echo "Start Test PHP-FPM v8.3"
                 docker ps
                 php_status=$(docker exec glpi service php8.3-fpm status)
+                sleep 15
                 if [ $? -eq 0 ]; then
                   echo -e "\033[92mPHP-FPM v8.3 status: $php_status (OK)\033[0m"
                 else
