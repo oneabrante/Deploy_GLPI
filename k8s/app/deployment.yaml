@@ -7,7 +7,7 @@ metadata:
   name: glpi-app
   namespace: dev-glpi
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: glpi-app
@@ -24,6 +24,7 @@ spec:
         resources: {}
         ports:
         - containerPort: 80
+        - containerPort: 443
         env:
         # - name: REDIS_HOST
         #   valueFrom:
