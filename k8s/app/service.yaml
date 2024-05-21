@@ -8,9 +8,14 @@ metadata:
   namespace: dev-glpi
 spec:
   ports:
-  - port: 80
+  - name: http
+    port: 80
     protocol: TCP
     targetPort: 80
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 443
   selector:
     app: glpi-app
   type: ClusterIP
