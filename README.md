@@ -27,7 +27,7 @@ chmod +x requirements.sh
 ```bash
 docker-compose up -d
 ```
-Nesse momento são criados ao todo 5 containers: glpi, phpmyadmin, mariadb, cert e redis. Os containers do phpmyadmin e cert foram criados para uma complementação de serviços à parte, porém, podem ser parados ou removidos do docker-compose.
+Nesse momento são criados ao todo 4 containers: glpi, phpmyadmin, mariadb e redis. O container do phpmyadmin foi criados para uma complementação de serviços à parte, assim como também o trecho comentado do container OpenSSL que gera certificados ssl.
 
 ## Procedimento
 - GLPI: http://localhost ou http://ip-do-servidor
