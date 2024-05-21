@@ -43,14 +43,14 @@ services:
     restart: always
 
   # Cert for certificate auto-renewal
-  cert:
-    container_name: cert
-    build: .docker/cert
-    volumes:
-      - ./certs:/app/certs
-    restart: always
-    networks:
-      - glpi-network
+  # cert:
+  #   container_name: cert
+  #   build: .docker/cert
+  #   volumes:
+  #     - ./certs:/app/certs
+  #   restart: always
+  #   networks:
+  #     - glpi-network
 
   glpi:
     container_name: glpi
@@ -74,6 +74,7 @@ services:
       - glpi-network
     depends_on:
       - redis
+      - mariadb
     # command: >
     #   sh -c "docker exec glpi echo -e "* *\t* * *\troot\tphp /var/www/html/glpi/front/cron.php" >> /etc/crontab"
     #   sh -c "docker exec glpi service cron restart"
