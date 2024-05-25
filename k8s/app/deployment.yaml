@@ -26,37 +26,46 @@ spec:
         - containerPort: 80
         - containerPort: 443
         env:
-        # - name: REDIS_HOST
-        #   valueFrom:
-        #     configMapKeyRef:
-        #       name: glpi-config
-        #       key: host
-        # - name: REDIS_PASSWORD
-        #   valueFrom:
-        #     secretKeyRef:
-        #       name: redis
-        #       key: redis-password
-        # - name: REDIS_PORT
+        - name: TIMEZONE
+          value: America/Sao_Paulo
+        - name: REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: redis-config
+              key: host
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: redis-secret
+              key: redis-password
+        - name: REDIS_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: redis-config
+              key: port
+        - name: MARIADB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: glpi-config
+              key: host
+        # - name: MARIADB_PORT
         #   valueFrom:
         #     configMapKeyRef:
         #       name: glpi-config
         #       key: port
-        - name: TIMEZONE
-          value: America/Sao_Paulo
-        # - name: REDIS_HOST
-        #   value: redis
-        # - name: REDIS_PORT
-        #   value: "6379"
-        # - name: REDIS_PASSWORD
-        #   value: password_glpi
-        - name: MYSQL_HOST
-          value: mariadb-service
-        - name: MYSQL_PORT
-          value: "3306"
-        - name: MYSQL_DATABASE
-          value: dbglpi
-        - name: MYSQL_USER
-          value: glpi
-        - name: MYSQL_PASSWORD
-          value: password_glpi
+        # - name: MARIADB_DATABASE
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: glpi-config
+        #       key: db
+        # - name: MARIADB_USER
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: glpi-config
+        #       key: user
+        # - name: MARIADB_PASSWORD
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: glpi-secret
+        #       key: mariadb-password
 status: {}
