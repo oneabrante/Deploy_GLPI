@@ -25,27 +25,24 @@ spec:
         ports:
         - containerPort: 3306
         env:
-        # - name: REDIS_HOST
-        #   valueFrom:
-        #     configMapKeyRef:
-        #       name: glpi-config
-        #       key: host
-        # - name: REDIS_PASSWORD
-        #   valueFrom:
-        #     secretKeyRef:
-        #       name: redis
-        #       key: redis-password
-        # - name: REDIS_PORT
-        #   valueFrom:
-        #     configMapKeyRef:
-        #       name: glpi-config
-        #       key: port
         - name: MARIADB_ROOT_PASSWORD
-          value: password_glpi
-        - name: MARIADB_DATABASE
-          value: dbglpi
-        - name: MARIADB_USER
-          value: glpi
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-secret
+              key: mariadb-root-password
         - name: MARIADB_PASSWORD
-          value: password_glpi
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-secret
+              key: mariadb-password
+        - name: MARIADB_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              name: mariadb-config
+              key: db
+        - name: MARIADB_USER
+          valueFrom:
+            configMapKeyRef:
+              name: mariadb-config
+              key: user
 status: {}
