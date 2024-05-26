@@ -48,4 +48,23 @@ spec:
             configMapKeyRef:
               name: glpi-config
               key: host
+        volumeMounts:
+        - mountPath: /var/www/html/glpi
+          name: glpi-storage
+        - mountPath: /etc/timezone
+          name: timezone
+          readOnly: true
+        - mountPath: /etc/localtime
+          name: localtime
+          readOnly: true
+      volumes:
+      - name: glpi-storage
+        hostPath:
+          path: /data/glpi
+      - name: timezone
+        hostPath:
+          path: /etc/timezone
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
 status: {}

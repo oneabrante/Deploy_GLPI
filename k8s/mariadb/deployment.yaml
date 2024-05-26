@@ -45,4 +45,11 @@ spec:
             configMapKeyRef:
               name: mariadb-config
               key: user
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: mariadb-storage
+      volumes:
+      - name: mariadb-storage
+        hostPath:
+          path: /data/mariadb
 status: {}
