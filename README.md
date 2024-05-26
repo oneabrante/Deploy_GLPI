@@ -56,6 +56,85 @@ Para habilitar o Redis, digite no terminal:
 ```bash
 docker exec glpi php /var/www/html/glpi/bin/console cache:configure --context=core --dsn=redis://redis:6379
 ```
+<hr>
+
+<h1> K8s </h1>
+
+<p align="justify">No diretório k8s, encontram-se os arquivos de configuração (manifest files) para o provisionamento do GLPI através do Kubernetes</p>
+<p align="justify">Os recursos necessários foram:</p>
+
+<p align="justify">Para o GLPI:</p>
+
+- Três Pods: Pensando em um cenário de maior disponibilidade e escalabilidade.
+- Service: Do tipo ClusterIP, para o fornecimento de conectividade interna entre diferentes recursos do cluster.
+- Ingress: Para que o serviço possa ser acessado de fora do cluster.
+- ConfigMap: Para armazenar o host do banco de dados.
+- Deployment: Para gerenciar a criação e a atualização dos Pods do GLPI.
+
+<p align="justify">Para o MariaDB:</p>
+
+- Um Pod: Para a execução do banco de dados.
+- Deployment: Para gerenciar a criação e a atualização do Pod do MariaDB.
+- ConfigMap: Para armazenar as variáveis de ambiente necessárias para a configuração do banco de dados.
+- Secret: Para armazenar as credenciais de conexão com o banco de dados.
+- Service: Do tipo ClusterIP, não sendo necessário o acesso externo.
+
+<p align="justify">Para o Redis:</p>
+
+- Um Pod: Para a execução do Redis.
+- Deployment: Para gerenciar a criação e a atualização do Pod do Redis.
+- Service: Do tipo ClusterIP, não sendo necessário o acesso externo.
+- ConfigMap: Para armazenar as variáveis de ambiente necessárias para a configuração do Redis.
+- Secret: Para armazenar as credenciais de conexão com o Redis.
+
+<h3>Pré-requisitos</h3>
+
+- Minikube com o driver do Docker
+- Kubectl
+- Ingress Controller (Nginx)
+- Namespace: dev-glpi
+
+<h3>Como usar</h3>
+
+```bash
+# Certifique-se que o Docker está instalado e rodando corretamente.
+# Após instalar o Minikube, execute os comandos abaixo:
+minikube config set driver docker
+minikube start
+
+# Habilite o Ingress Controller (Nginx: por padrão no Minikube)
+minikube addons enable ingress
+# Crie o namespace dev-glpi
+kubectl create ns dev-glpi
+
+# Acesse o diretório raiz do repositório e execute o comando logo em seguida:
+cd Deploy_GLPI/
+cd k8s/app/ && kubectl apply -f . && cd ../mariadb/ && kubectl apply -f . && cd ../redis/ && kubectl apply -f .
+
+# Verifique se os recursos foram criados
+kubectl get pod,svc,secret,deployment,ingress,replicaset -n dev-glpi
+
+# Nesse momento o GLPI fica disponível apenas internamente ao cluster, para acessar externamente, execute o comando abaixo:
+kubectl port-forward --address 192.168.0.99 service/app-service 8000:80 8443:443 -n dev-glpi
+
+# Acesse o GLPI através do endereço: http://192.168.0.99:8000
+```
+
+<p align="center">
+    <img src="registry/cluster_k8s.png" alt="Cluster_k8s"/>
+    <br>
+    <span>watch kubectl get pod,svc,secret,deployment,ingress,replicaset -n dev-glpi</span>
+</p>
+<br>
+
+<h3>Implementação do Redis</h3>
+
+<p align="justify">Para habilitar o Redis, digite no terminal:</p>
+
+```bash
+kubectl exec service/app-service -n dev-glpi -- php /var/www/html/glpi/bin/console cache:configure --context=core --dsn=redis://redis-service:6379
+```
+
 
 ## Autor
 <img src="https://avatars.githubusercontent.com/u/89171200?v=4" width=115><br><sub>Thiago Abrante</sub>
