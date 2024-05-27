@@ -127,6 +127,11 @@ kubectl port-forward --address 192.168.0.99 service/app-service 8000:80 8443:443
 </p>
 <br>
 
+Na tela de configuração do GLPI, siga os passos abaixo:
+1. No campo relacionado ao banco de dados, use o nome do Service do MariaDB: `mariadb-service`
+2. No campo do usuário, use `glpi`
+3. No campo da senha, use `password_glpi`
+
 <h3>Implementação do Redis</h3>
 
 <p align="justify">Para habilitar o Redis, digite no terminal:</p>
@@ -146,5 +151,5 @@ kubectl exec service/app-service -n dev-glpi -- php /var/www/html/glpi/bin/conso
 - [Redis](https://redis.io/)
 - [Docker](https://www.docker.com/)
 - [Docker Compose](https://docs.docker.com/compose/)
-
-
+- [Kubernetes](https://kubernetes.io/)
+- [Minikube](https://minikube.sigs.k8s.io/docs/)
